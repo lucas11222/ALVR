@@ -2,7 +2,7 @@ use crate::{
     from_xr_pose,
     graphics::{self, CompositionLayerBuilder},
     interaction::{self, InteractionContext},
-    to_xr_fov, to_xr_pose, XrContext,
+    to_xr_fov, to_xr_pose, to_xr_time, XrContext,
 };
 use alvr_client_core::{
     graphics::{GraphicsContext, StreamRenderer},
@@ -310,7 +310,8 @@ impl StreamContext {
         let view_params;
         let buffer_ptr;
         if let Some(frame) = decoded_frame {
-            timestamp = frame.timestamp;
+            timestamp = vsync_time;
+            // timestamp = frame.timestamp;
             view_params = frame.view_params;
             buffer_ptr = frame.buffer_ptr;
 
@@ -354,12 +355,30 @@ impl StreamContext {
             },
         };
 
+        let (flags, maybe_views) = self
+            .xr_context
+            .session
+            .locate_views(
+                xr::ViewConfigurationType::PRIMARY_STEREO,
+                to_xr_time(timestamp),
+                &self.reference_space,
+            )
+            .unwrap();
+
+        let views = if flags.contains(xr::ViewStateFlags::ORIENTATION_VALID) {
+            maybe_views
+        } else {
+            vec![crate::default_view(), crate::default_view()]
+        };
+
         CompositionLayerBuilder::new(
             &self.reference_space,
             [
                 xr::CompositionLayerProjectionView::new()
-                    .pose(to_xr_pose(view_params[0].pose))
-                    .fov(to_xr_fov(view_params[0].fov))
+                    .pose(views[0].pose)
+                    .fov(views[0].fov)
+                    // .pose(to_xr_pose(view_params[0].pose))
+                    // .fov(to_xr_fov(view_params[0].fov))
                     .sub_image(
                         xr::SwapchainSubImage::new()
                             .swapchain(&self.swapchains[0])
@@ -367,8 +386,10 @@ impl StreamContext {
                             .image_rect(rect),
                     ),
                 xr::CompositionLayerProjectionView::new()
-                    .pose(to_xr_pose(view_params[1].pose))
-                    .fov(to_xr_fov(view_params[1].fov))
+                    .pose(views[1].pose)
+                    .fov(views[1].fov)
+                    // .pose(to_xr_pose(view_params[1].pose))
+                    // .fov(to_xr_fov(view_params[1].fov))
                     .sub_image(
                         xr::SwapchainSubImage::new()
                             .swapchain(&self.swapchains[1])

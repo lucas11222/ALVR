@@ -442,7 +442,7 @@ pub fn entry_point() {
 
                 let layer = context.render(frame_result, vsync_time);
 
-                (layer, timestamp)
+                (layer, vsync_time)
             } else {
                 let layer = lobby.render(frame_state.predicted_display_time);
 
