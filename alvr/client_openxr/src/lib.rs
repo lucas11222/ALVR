@@ -383,10 +383,10 @@ pub fn entry_point() {
                             parsed_stream_config = Some(new_config);
                         }
 
-                        passthrough_layer = None;
+                        // passthrough_layer = None;
                     }
                     ClientCoreEvent::StreamingStopped => {
-                        passthrough_layer = PassthroughLayer::new(&xr_session).ok();
+                        // passthrough_layer = PassthroughLayer::new(&xr_session).ok();
 
                         stream_context = None;
                     }

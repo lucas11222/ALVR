@@ -419,7 +419,7 @@ impl StreamContext {
                             .image_rect(rect),
                     ),
             ],
-            false,
+            true,
         );
 
         (layer, timestamp)

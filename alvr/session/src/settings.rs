@@ -556,7 +556,60 @@ pub enum H264Profile {
 }
 
 #[derive(SettingsSchema, Serialize, Deserialize, Clone)]
+pub struct ChromaKeying {
+    #[schema(
+        strings(display_name = "Hue"),
+        gui(slider(min = 0.0, max = 360.0, step = 1.0)),
+        suffix = "°"
+    )]
+    hue_deg: f32,
+
+    #[schema(
+        strings(display_name = "Hue range"),
+        gui(slider(min = 0.0, max = 360.0, step = 1.0)),
+        suffix = "°"
+    )]
+    hue_range_deg: f32,
+
+    #[schema(
+        strings(display_name = "Hue feather width"),
+        gui(slider(min = 0.0, max = 360.0, step = 1.0)),
+        suffix = "°"
+    )]
+    hue_feather_width_deg: f32,
+
+    #[schema(gui(slider(min = 0.0, max = 1.0, step = 0.01)))]
+    saturation: f32,
+
+    #[schema(gui(slider(min = 0.0, max = 2.0, step = 0.01)))]
+    saturation_range: f32,
+
+    #[schema(gui(slider(min = 0.0, max = 1.0, step = 0.01)))]
+    saturation_feather_width: f32,
+
+    #[schema(gui(slider(min = 0.0, max = 1.0, step = 0.01)))]
+    value: f32,
+
+    #[schema(gui(slider(min = 0.0, max = 2.0, step = 0.01)))]
+    value_range: f32,
+
+    #[schema(gui(slider(min = 0.0, max = 1.0, step = 0.01)))]
+    value_feather_width: f32,
+}
+
+#[derive(SettingsSchema, Serialize, Deserialize, Clone)]
+pub struct PassthroughMode {
+    #[schema(gui(slider(min = 0.0, max = 1.0, step = 0.01)))]
+    brightness: f32,
+
+    #[schema(strings(help = "Chroma keying using the HSV color coordinates"))]
+    chroma_keying: Switch<ChromaKeying>,
+}
+
+#[derive(SettingsSchema, Serialize, Deserialize, Clone)]
 pub struct VideoConfig {
+    pub passthrough: Switch<PassthroughMode>,
+
     pub bitrate: BitrateConfig,
 
     #[schema(strings(
@@ -1360,6 +1413,26 @@ pub fn session_settings_default() -> SettingsDefault {
 
     SettingsDefault {
         video: VideoConfigDefault {
+            passthrough: SwitchDefault {
+                enabled: false,
+                content: PassthroughModeDefault {
+                    brightness: 1.0,
+                    chroma_keying: SwitchDefault {
+                        enabled: false,
+                        content: ChromaKeyingDefault {
+                            hue_deg: 120.0,
+                            hue_range_deg: 80.0,
+                            hue_feather_width_deg: 20.0,
+                            saturation: 1.0,
+                            saturation_range: 1.8,
+                            saturation_feather_width: 0.2,
+                            value: 1.0,
+                            value_range: 1.8,
+                            value_feather_width: 0.2,
+                        },
+                    },
+                },
+            },
             adapter_index: 0,
             transcoding_view_resolution: view_resolution.clone(),
             emulated_headset_view_resolution: view_resolution,
