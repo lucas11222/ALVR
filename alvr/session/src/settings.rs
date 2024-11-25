@@ -678,6 +678,8 @@ pub enum MicrophoneDevicesConfig {
     VoiceMeeter,
     #[schema(strings(display_name = "VoiceMeeter Aux"))]
     VoiceMeeterAux,
+    #[schema(strings(display_name = "Steam Microphone"))]
+    SteamMicrophone,
     #[schema(strings(display_name = "VoiceMeeter VAIO3"))]
     VoiceMeeterVaio3,
     Custom {

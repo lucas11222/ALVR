@@ -33,6 +33,7 @@ static VIRTUAL_MICROPHONE_PAIRS: Lazy<HashMap<&str, &str>> = Lazy::new(|| {
         ("CABLE Input", "CABLE Output"),
         ("VoiceMeeter Input", "VoiceMeeter Output"),
         ("VoiceMeeter Aux Input", "VoiceMeeter Aux Output"),
+        ("Steam Streaming Microphone", "Steam Streaming Speakers"),
         ("VoiceMeeter VAIO3 Input", "VoiceMeeter VAIO3 Output"),
     ]
     .into_iter()
@@ -144,6 +145,9 @@ impl AudioDevice {
             }
             MicrophoneDevicesConfig::VoiceMeeterAux => {
                 microphone_pair_from_sink_name(&host, "VoiceMeeter Aux Input")?
+            }
+            MicrophoneDevicesConfig::SteamMicrophone => {
+                microphone_pair_from_sink_name(&host, "Steam Streaming Microphone")?
             }
             MicrophoneDevicesConfig::VoiceMeeterVaio3 => {
                 microphone_pair_from_sink_name(&host, "VoiceMeeter VAIO3 Input")?

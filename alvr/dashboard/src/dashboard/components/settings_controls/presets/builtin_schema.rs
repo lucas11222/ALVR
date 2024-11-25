@@ -279,6 +279,7 @@ pub fn microphone_schema(devices: Vec<String>) -> PresetSchemaNode {
             ("VBCable", "VB Cable"),
             ("VoiceMeeter", "VoiceMeeter"),
             ("VoiceMeeterAux", "VoiceMeeter Aux"),
+            ("SteamMicrophone", "Steam Streaming Microphone"),
             ("VoiceMeeterVaio3", "VoiceMeeter VAIO3"),
         ] {
             microhone_options.push(HigherOrderChoiceOption {
